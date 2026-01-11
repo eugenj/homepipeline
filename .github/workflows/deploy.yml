@@ -51,9 +51,15 @@ jobs:
         role-to-assume: arn:aws:iam::994470426048:role/GitHubActionsHomePipelineRole
         aws-region: us-east-1
     
+    - name: Test AWS connection
+      run: |
+        aws sts get-caller-identity
+        echo "AWS connection successful"
+    
     - name: SAM build
       run: sam build
     
-    - name: SAM deploy
+    - name: SAM deploy (dry run)
       run: |
-        sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name homepipeline-stack --capabilities CAPABILITY_IAM --region us-east-1
+        echo "Skipping actual deployment for now - would run:"
+        echo "sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name homepipeline-stack --capabilities CAPABILITY_IAM --region us-east-1"
