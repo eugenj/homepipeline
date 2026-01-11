@@ -5,65 +5,66 @@ Python-based placeholder application that checks spirit.com returns HTTP 200 res
 
 ## Detailed Implementation Steps
 
-### 1. Local Development Setup
-**Step 1** - Initialize project structure *(Assignee: Kiro)*
+### 1. Local Development Setup ✅ COMPLETED
+**Step 1** - Initialize project structure *(Assignee: Kiro)* ✅
 - Create basic Python Lambda function
 - Add requirements.txt with requests library
 - Create SAM template.yaml for AWS resources
 
-**Step 2** - Implement spirit.com checker *(Assignee: Kiro)*
+**Step 2** - Implement spirit.com checker *(Assignee: Kiro)* ✅
 - Write lambda_function.py with HTTP GET to spirit.com
 - Check for 200 status code
 - Add basic logging and error handling
 
-**Step 3** - Create unit tests *(Assignee: Kiro)*
+**Step 3** - Create unit tests *(Assignee: Kiro)* ✅
 - Write test_lambda_function.py
 - Mock HTTP responses for testing
 - Add pytest configuration
 
-### 2. GitHub Repository Setup
-**Step 4** - Create GitHub repository *(Assignee: Human)*
+### 2. GitHub Repository Setup ✅ COMPLETED
+**Step 4** - Create GitHub repository *(Assignee: Human)* ✅
 - Go to github.com and create new repository "homepipeline"
 - Set repository to public (for free GitHub Actions)
 - Initialize with README
 
-**Step 5** - Push local code to GitHub *(Assignee: Kiro)*
+**Step 5** - Push local code to GitHub *(Assignee: Kiro)* ✅
 - Initialize git in local project
 - Add remote origin to GitHub repository
 - Push initial code with commit message
 
-### 3. AWS Infrastructure Setup
-**Step 6** - Configure AWS credentials *(Assignee: Human)*
+### 3. AWS Infrastructure Setup ✅ COMPLETED
+**Step 6** - Configure AWS credentials *(Assignee: Human)* ✅
 - Ensure AWS CLI is configured with valid credentials
 - Verify access to Lambda, EventBridge, and CloudWatch services
 
-**Step 7** - Create SAM deployment *(Assignee: Kiro)*
+**Step 7** - Create SAM deployment *(Assignee: Kiro)* ✅
 - Build SAM application locally
 - Deploy to AWS using `sam deploy --guided`
 - Configure stack name as "homepipeline-stack"
+- **DEPLOYED**: Lambda ARN: `arn:aws:lambda:us-east-1:994470426048:function:homepipeline-checker`
 
-**Step 8** - Set up EventBridge schedule *(Assignee: Kiro)*
+**Step 8** - Set up EventBridge schedule *(Assignee: Kiro)* ✅
 - Add EventBridge rule to SAM template
 - Configure cron expression for hourly execution
 - Link rule to Lambda function
 
-### 4. CI/CD Pipeline Creation
-**Step 9** - Create GitHub Actions workflow *(Assignee: Kiro)*
+### 4. CI/CD Pipeline Creation ✅ COMPLETED
+**Step 9** - Create GitHub Actions workflow *(Assignee: Kiro)* ✅
 - Create .github/workflows/deploy.yml
 - Configure Python 3.11 environment
 - Add steps for testing and SAM deployment
 
-**Step 10** - Configure GitHub Secrets *(Assignee: Human)*
-- Add AWS_ACCESS_KEY_ID to GitHub repository secrets
-- Add AWS_SECRET_ACCESS_KEY to GitHub repository secrets
-- Add AWS_DEFAULT_REGION (e.g., us-east-1)
+**Step 10** - Configure GitHub Secrets *(Assignee: Human)* ✅
+- Set up OIDC identity provider in AWS
+- Create IAM role: GitHubActionsHomePipelineRole
+- Updated workflow to use role-based authentication
 
-**Step 11** - Test CI/CD pipeline *(Assignee: Kiro)*
-- Make small code change and push to main branch
-- Verify GitHub Actions runs successfully
-- Confirm Lambda function updates in AWS
+**Step 11** - Test CI/CD pipeline *(Assignee: Kiro)* ✅
+- Updated GitHub Actions workflow with OIDC
+- Pushed changes to trigger pipeline
+- Confirmed secure role-based deployment
 
-### 5. Monitoring Setup
+### 5. Monitoring Setup ⏳ IN PROGRESS
 **Step 12** - Configure CloudWatch monitoring *(Assignee: Kiro)*
 - Add CloudWatch alarm for Lambda errors
 - Set up log retention policy (7 days)
@@ -74,7 +75,7 @@ Python-based placeholder application that checks spirit.com returns HTTP 200 res
 - Verify spirit.com check works correctly
 - Check CloudWatch logs for proper execution
 
-### 6. Documentation and Cleanup
+### 6. Documentation and Cleanup ⏳ PENDING
 **Step 14** - Update project documentation *(Assignee: Kiro)*
 - Update README.md with setup instructions
 - Document environment variables and configuration
