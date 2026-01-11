@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: HomePipeline - Spirit.com Monitor
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 128
+    Runtime: python3.11
+
+Resources:
+  HomePipelineFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: homepipeline-checker
+      CodeUri: .
+      Handler: lambda_function.lambda_handler
+      Events:
+        HourlyCheck:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+            Name: hourly-spirit-check
+            Description: Check spirit.com every hour
+
+  HomePipelineFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${HomePipelineFunction}
+      RetentionInDays: 7
+
+Outputs:
+  HomePipelineFunction:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt HomePipelineFunction.Arn
+  HomePipelineFunctionIamRole:
+    Description: "Implicit IAM Role created for function"
+    Value: !GetAtt HomePipelineFunctionRole.Arn
