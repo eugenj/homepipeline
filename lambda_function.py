@@ -18,7 +18,8 @@ def lambda_handler(event, context):
                 'statusCode': 200,
                 'body': json.dumps({
                     'message': 'spirit.com is accessible',
-                    'status_code': response.status_code
+                    'status_code': response.status_code,
+                    'timestamp': context.aws_request_id if context else 'local'
                 })
             }
         else:
