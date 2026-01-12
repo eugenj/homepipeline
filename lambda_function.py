@@ -9,6 +9,7 @@ def lambda_handler(event, context):
     """
     Check if spirit.com returns HTTP 200 status
     """
+    logger.info(f"Starting spirit.com health check...")
     try:
         response = requests.get('https://spirit.com', timeout=30)
         
