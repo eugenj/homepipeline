@@ -31,7 +31,10 @@ def test_spirit_com_returns_200(mock_get):
     body = json.loads(result['body'])
     assert body['message'] == 'spirit.com is accessible'
     assert body['status_code'] == 200
-    mock_get.assert_called_once_with('https://spirit.com', timeout=30)
+    expected_headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    mock_get.assert_called_once_with('https://spirit.com', timeout=30, headers=expected_headers)
 
 @patch('requests.get')
 def test_spirit_com_returns_non_200(mock_get):
