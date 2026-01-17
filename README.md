@@ -11,7 +11,7 @@ A serverless application that checks if spirit.com returns HTTP 200 status every
 ## Project Structure
 ```
 homepipeline/
-├── lambda_function.py         # Main Lambda handler
+├── spirit_monitoring.py       # Main Lambda handler
 ├── requirements.txt          # Python dependencies
 ├── template.yaml            # SAM template for AWS resources
 ├── tests/
