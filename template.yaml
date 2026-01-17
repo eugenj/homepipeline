@@ -34,7 +34,7 @@ Resources:
     Properties:
       FunctionName: bbc-monitoring
       CodeUri: .
-      Handler: bbc_monitoring.lambda_handler
+      Handler: rsm_monitoring.lambda_handler
       Runtime: python3.11
       Timeout: 30
       MemorySize: 128

@@ -4,21 +4,21 @@ from unittest.mock import patch, Mock
 import sys
 import os
 
-# Add parent directory to path to import bbc_monitoring
+# Add parent directory to path to import rsm_monitoring
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_import():
-    """Test that we can import the bbc_monitoring module"""
+    """Test that we can import the rsm_monitoring module"""
     try:
-        import bbc_monitoring
-        assert hasattr(bbc_monitoring, 'lambda_handler')
+        import rsm_monitoring
+        assert hasattr(rsm_monitoring, 'lambda_handler')
     except ImportError as e:
-        pytest.fail(f"Failed to import bbc_monitoring: {e}")
+        pytest.fail(f"Failed to import rsm_monitoring: {e}")
 
 @patch('requests.get')
 def test_bbc_com_returns_200(mock_get):
     """Test successful response from bbc.com"""
-    from bbc_monitoring import lambda_handler
+    from rsm_monitoring import lambda_handler
     
     mock_response = Mock()
     mock_response.status_code = 200
@@ -38,7 +38,7 @@ def test_bbc_com_returns_200(mock_get):
 @patch('requests.get')
 def test_bbc_com_returns_non_200(mock_get):
     """Test non-200 response from bbc.com"""
-    from bbc_monitoring import lambda_handler
+    from rsm_monitoring import lambda_handler
     
     mock_response = Mock()
     mock_response.status_code = 404
@@ -54,7 +54,7 @@ def test_bbc_com_returns_non_200(mock_get):
 @patch('requests.get')
 def test_bbc_com_request_exception(mock_get):
     """Test exception during request to bbc.com"""
-    from bbc_monitoring import lambda_handler
+    from rsm_monitoring import lambda_handler
     
     mock_get.side_effect = Exception("Connection timeout")
     
