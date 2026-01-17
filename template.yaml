@@ -29,6 +29,31 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${HomePipelineFunction}
       RetentionInDays: 7
 
+  BBCPipelineFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: bbc-monitoring
+      CodeUri: .
+      Handler: bbc_monitoring.lambda_handler
+      Runtime: python3.11
+      Timeout: 30
+      MemorySize: 128
+      Events:
+        HourlyCheck:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+            Name: hourly-bbc-check
+            Description: Check bbc.com every hour
+      LoggingConfig:
+        LogGroup: !Ref BBCPipelineFunctionLogGroup
+
+  BBCPipelineFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/bbc-monitoring
+      RetentionInDays: 7
+
 Outputs:
   HomePipelineFunction:
     Description: "Lambda Function ARN"
@@ -36,3 +61,9 @@ Outputs:
   HomePipelineFunctionIamRole:
     Description: "Implicit IAM Role created for function"
     Value: !GetAtt HomePipelineFunctionRole.Arn
+  BBCPipelineFunction:
+    Description: "BBC Lambda Function ARN"
+    Value: !GetAtt BBCPipelineFunction.Arn
+  BBCPipelineFunctionIamRole:
+    Description: "Implicit IAM Role created for BBC function"
+    Value: !GetAtt BBCPipelineFunctionRole.Arn
