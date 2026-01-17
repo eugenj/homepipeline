@@ -42,7 +42,7 @@ Resources:
         HourlyCheck:
           Type: Schedule
           Properties:
-            Schedule: rate(1 hour)
+            Schedule: rate(5 minutes)
             Name: hourly-bbc-check
             Description: Check bbc.com every hour
       LoggingConfig:
