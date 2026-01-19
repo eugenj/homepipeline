@@ -12,54 +12,73 @@ def test_import():
     try:
         import rsm_monitoring
         assert hasattr(rsm_monitoring, 'lambda_handler')
+        assert hasattr(rsm_monitoring, 'get_password')
+        assert hasattr(rsm_monitoring, 'get_bearer_token')
+        assert hasattr(rsm_monitoring, 'get_student_data')
     except ImportError as e:
         pytest.fail(f"Failed to import rsm_monitoring: {e}")
 
-@patch('requests.get')
-def test_bbc_com_returns_200(mock_get):
-    """Test successful response from bbc.com"""
+@patch('rsm_monitoring.get_password')
+@patch('rsm_monitoring.get_bearer_token')
+@patch('rsm_monitoring.get_student_data')
+def test_lambda_handler_success(mock_get_student_data, mock_get_bearer_token, mock_get_password):
+    """Test successful RSM data retrieval"""
     from rsm_monitoring import lambda_handler
     
-    mock_response = Mock()
-    mock_response.status_code = 200
-    mock_get.return_value = mock_response
+    # Mock the dependencies
+    mock_get_password.return_value = "test_password"
+    mock_get_bearer_token.return_value = "test_bearer_token"
+    mock_get_student_data.return_value = {
+        "Student_163934": {"Class_103501": [{"id": 1, "score": 100}]},
+        "Student_183013": {"Class_103546": [{"id": 2, "score": 95}]},
+        "Student_267501": {"Class_102348": [{"id": 3, "score": 98}]}
+    }
     
-    result = lambda_handler({}, {})
+    # Mock context
+    context = Mock()
+    context.aws_request_id = "test-request-id"
+    
+    result = lambda_handler({}, context)
     
     assert result['statusCode'] == 200
     body = json.loads(result['body'])
-    assert body['message'] == 'bbc.com is accessible'
-    assert body['status_code'] == 200
-    expected_headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    mock_get.assert_called_once_with('https://bbc.com', timeout=30, headers=expected_headers)
+    assert body['message'] == 'RSM academic data retrieved successfully'
+    assert body['students_processed'] == 3
+    assert body['total_assignments'] == 3
+    assert 'data' in body
 
-@patch('requests.get')
-def test_bbc_com_returns_non_200(mock_get):
-    """Test non-200 response from bbc.com"""
+@patch('rsm_monitoring.get_password')
+def test_lambda_handler_password_failure(mock_get_password):
+    """Test failure when password cannot be retrieved"""
     from rsm_monitoring import lambda_handler
     
-    mock_response = Mock()
-    mock_response.status_code = 404
-    mock_get.return_value = mock_response
+    mock_get_password.side_effect = Exception("No password found in AWS Secrets Manager")
     
-    result = lambda_handler({}, {})
+    # Mock context
+    context = Mock()
+    context.aws_request_id = "test-request-id"
+    
+    result = lambda_handler({}, context)
     
     assert result['statusCode'] == 500
     body = json.loads(result['body'])
-    assert 'bbc.com returned 404' in body['message']
-    assert body['status_code'] == 404
+    assert 'No password found in AWS Secrets Manager' in body['error']
 
-@patch('requests.get')
-def test_bbc_com_request_exception(mock_get):
-    """Test exception during request to bbc.com"""
+@patch('rsm_monitoring.get_password')
+@patch('rsm_monitoring.get_bearer_token')
+def test_lambda_handler_token_failure(mock_get_bearer_token, mock_get_password):
+    """Test failure when bearer token cannot be retrieved"""
     from rsm_monitoring import lambda_handler
     
-    mock_get.side_effect = Exception("Connection timeout")
+    mock_get_password.return_value = "test_password"
+    mock_get_bearer_token.return_value = None
     
-    result = lambda_handler({}, {})
+    # Mock context
+    context = Mock()
+    context.aws_request_id = "test-request-id"
+    
+    result = lambda_handler({}, context)
     
     assert result['statusCode'] == 500
     body = json.loads(result['body'])
-    assert 'Error checking bbc.com: Connection timeout' in body['message']
+    assert 'Could not retrieve Bearer token' in body['error']
