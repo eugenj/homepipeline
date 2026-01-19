@@ -1,8 +1,6 @@
-boto3
-botocore
 requests
 beautifulsoup4
 selenium
 boto3
-botocore[crt]==2.32.4
+botocore[crt]
 pytest==7.4.3
