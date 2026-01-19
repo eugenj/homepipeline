@@ -29,7 +29,7 @@ Resources:
       LogGroupName: !Sub /aws/lambda/${HomePipelineFunction}
       RetentionInDays: 7
 
-  BBCPipelineFunction:
+  RSMPipelineFunction:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: rsm-monitoring
@@ -58,9 +58,9 @@ Resources:
             Name: hourly-rsm-check
             Description: Check RSM portal every hour
       LoggingConfig:
-        LogGroup: !Ref BBCPipelineFunctionLogGroup
+        LogGroup: !Ref RSMPipelineFunctionLogGroup
 
-  BBCPipelineFunctionLogGroup:
+  RSMPipelineFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: /aws/lambda/rsm-monitoring
@@ -73,9 +73,9 @@ Outputs:
   HomePipelineFunctionIamRole:
     Description: "Implicit IAM Role created for function"
     Value: !GetAtt HomePipelineFunctionRole.Arn
-  BBCPipelineFunction:
-    Description: "BBC Lambda Function ARN"
-    Value: !GetAtt BBCPipelineFunction.Arn
-  BBCPipelineFunctionIamRole:
-    Description: "Implicit IAM Role created for BBC function"
-    Value: !GetAtt BBCPipelineFunctionRole.Arn
+  RSMPipelineFunction:
+    Description: "RSM Lambda Function ARN"
+    Value: !GetAtt RSMPipelineFunction.Arn
+  RSMPipelineFunctionIamRole:
+    Description: "Implicit IAM Role created for RSM function"
+    Value: !GetAtt RSMPipelineFunctionRole.Arn
