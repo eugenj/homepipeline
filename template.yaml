@@ -43,6 +43,7 @@ Resources:
       Environment:
         Variables:
           CHROME_EXECUTABLE_PATH: /opt/chrome/chrome
+          CHROMEDRIVER_PATH: /opt/chromedriver
       Policies:
         - Version: "2012-10-17"
           Statement:
