@@ -2,9 +2,11 @@ import json
 import requests
 import logging
 import boto3
+import os
 from botocore.exceptions import ClientError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
 
@@ -33,9 +35,22 @@ def get_bearer_token(email, password):
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
+    options.add_argument('--disable-gpu')
+    options.add_argument('--single-process')
+    options.add_argument('--no-zygote')
+    options.add_argument('--remote-debugging-port=9222')
     
-    driver = webdriver.Chrome(options=options)
+    # Lambda-specific Chrome configuration
+    if os.getenv('AWS_LAMBDA_FUNCTION_NAME'):
+        # Running in Lambda - use Chrome layer
+        options.binary_location = '/opt/chrome/chrome'
+        service = Service('/opt/chromedriver')
+        driver = webdriver.Chrome(service=service, options=options)
+    else:
+        # Running locally
+        driver = webdriver.Chrome(options=options)
+    
+    options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
     
     try:
         driver.get("https://parents.mathschool.com/parent-portal/")
