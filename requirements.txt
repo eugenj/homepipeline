@@ -1,4 +1,6 @@
 requests
+beautifulsoup4
+selenium
 boto3
 botocore[crt]
 pytest==7.4.3
