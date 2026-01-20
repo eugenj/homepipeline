@@ -44,6 +44,11 @@ def get_bearer_token(email, password):
     if os.getenv('AWS_LAMBDA_FUNCTION_NAME'):
         # Running in Lambda - use Chrome layer
         options.binary_location = '/opt/chrome/chrome'
+        options.add_argument('--user-data-dir=/tmp/chrome-user-data')
+        options.add_argument('--data-path=/tmp/chrome-data')
+        options.add_argument('--homedir=/tmp')
+        options.add_argument('--disk-cache-dir=/tmp/chrome-cache')
+        
         service = Service('/opt/chromedriver')
         driver = webdriver.Chrome(service=service, options=options)
     else:
