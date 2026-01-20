@@ -2,11 +2,9 @@ import json
 import requests
 import logging
 import boto3
-import os
 from botocore.exceptions import ClientError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 import time
 
@@ -35,26 +33,6 @@ def get_bearer_token(email, password):
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--window-size=1920,1080')
-    options.add_argument('--single-process')
-    options.add_argument('--disable-dev-tools')
-    options.add_argument('--no-zygote')
-    
-    # Use Chrome from layer if available
-    chrome_path = os.getenv('CHROME_EXECUTABLE_PATH', '/opt/chrome/chrome')
-    if os.path.exists(chrome_path):
-        options.binary_location = chrome_path
-    
-    # Use ChromeDriver from layer if available  
-    chromedriver_path = '/opt/chromedriver'
-    if os.path.exists(chromedriver_path):
-        from selenium.webdriver.chrome.service import Service
-        service = Service(chromedriver_path)
-        driver = webdriver.Chrome(service=service, options=options)
-    else:
-        driver = webdriver.Chrome(options=options)
-    
     options.set_capability('goog:loggingPrefs', {'performance': 'ALL'})
     
     driver = webdriver.Chrome(options=options)
