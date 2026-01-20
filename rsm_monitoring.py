@@ -50,7 +50,7 @@ def get_bearer_token(email, password):
         options.add_argument('--disk-cache-dir=/tmp/chrome-cache')
         
         # Try multiple possible ChromeDriver locations
-        chromedriver_paths = ['/opt/chromedriver', '/opt/bin/chromedriver', '/usr/local/bin/chromedriver']
+        chromedriver_paths = ['/opt/chromedriver', '/opt/bin/chromedriver', '/opt/chrome/chromedriver']
         service = None
         
         for path in chromedriver_paths:
