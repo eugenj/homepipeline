@@ -49,8 +49,21 @@ def get_bearer_token(email, password):
         options.add_argument('--homedir=/tmp')
         options.add_argument('--disk-cache-dir=/tmp/chrome-cache')
         
-        service = Service('/opt/chromedriver')
-        driver = webdriver.Chrome(service=service, options=options)
+        # Try multiple possible ChromeDriver locations
+        chromedriver_paths = ['/opt/chromedriver', '/opt/bin/chromedriver', '/usr/local/bin/chromedriver']
+        service = None
+        
+        for path in chromedriver_paths:
+            if os.path.exists(path):
+                service = Service(path)
+                logger.info(f"Using ChromeDriver at: {path}")
+                break
+        
+        if service:
+            driver = webdriver.Chrome(service=service, options=options)
+        else:
+            logger.warning("ChromeDriver not found, trying without service")
+            driver = webdriver.Chrome(options=options)
     else:
         # Running locally
         driver = webdriver.Chrome(options=options)
